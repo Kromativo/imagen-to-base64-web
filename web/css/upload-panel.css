@@ -1,1 +1,299 @@
-/* Upload panel styles — Sprint 1 */
+/* Upload panel styles — Kromativo brand */
+
+#app {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.upload-container {
+    width: 100%;
+    max-width: 560px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.4em;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 1em;
+    line-height: 1.5;
+    margin-bottom: 32px;
+}
+
+.dropzone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 48px 24px;
+    background: var(--bg-elevated);
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.dropzone:hover,
+.dropzone.dragover {
+    border-color: var(--border-hover);
+    background: var(--bg-elevated-2);
+}
+
+.dropzone-icon {
+    font-size: 2em;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.dropzone-text {
+    font-size: 1em;
+    color: var(--text-primary);
+}
+
+.dropzone-link {
+    color: var(--accent-light);
+    text-decoration: underline;
+}
+
+.dropzone-hint {
+    font-size: 0.8em;
+    color: var(--text-tertiary);
+}
+
+.file-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.file-progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--bg-elevated-2);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.file-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    border-radius: 999px;
+    transition: width 0.25s ease;
+}
+
+.file-progress-count {
+    font-size: 0.78em;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.file-list {
+    list-style: none;
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    text-align: left;
+}
+
+.file-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.file-item-name {
+    font-size: 0.88em;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-item-size {
+    font-size: 0.76em;
+    color: var(--text-tertiary);
+}
+
+.file-item-remove {
+    background: transparent;
+    border: none;
+    color: var(--text-tertiary);
+    font-size: 1em;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+    flex-shrink: 0;
+}
+
+.file-item-remove:hover {
+    color: var(--text-primary);
+    background: rgba(255,255,255,0.08);
+}
+
+.file-list-summary {
+    margin-top: 10px;
+    font-size: 0.8em;
+    color: var(--text-tertiary);
+    text-align: left;
+}
+
+.privacy-note {
+    margin-top: 20px;
+    font-size: 0.8em;
+    color: var(--text-tertiary);
+}
+
+.error-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.error-list:not(:empty) {
+    margin-top: 14px;
+}
+
+.error-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px 10px 16px;
+    background: rgba(255,69,58,0.1);
+    border: 1px solid rgba(255,69,58,0.3);
+    color: var(--error);
+    border-radius: var(--radius-sm);
+    font-size: 0.85em;
+    text-align: left;
+}
+
+.error-item-dismiss {
+    background: transparent;
+    border: none;
+    color: var(--error);
+    opacity: 0.7;
+    font-size: 1em;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    transition: opacity 0.2s, background 0.2s;
+}
+
+.error-item-dismiss:hover {
+    opacity: 1;
+    background: rgba(255,69,58,0.15);
+}
+
+.btn-convert {
+    width: 100%;
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-family);
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, opacity 0.2s, transform 0.1s;
+}
+
+.btn-convert:hover:not(:disabled) {
+    background: var(--accent-light);
+}
+
+.btn-convert:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.btn-convert:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .upload-container {
+        margin-top: 56px;
+    }
+
+    h1 { font-size: 1.9em; }
+
+    .dropzone {
+        flex-direction: row;
+        padding: 16px 20px;
+        background: var(--accent);
+        border: none;
+        border-radius: var(--radius-sm);
+        box-shadow: 0 4px 14px rgba(250,20,122,0.28);
+    }
+
+    .dropzone:hover,
+    .dropzone.dragover {
+        background: var(--accent-light);
+    }
+
+    .dropzone-icon {
+        font-size: 1.3em;
+        color: #fff;
+        margin-bottom: 0;
+    }
+
+    .dropzone-text {
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .dropzone-link {
+        color: #fff;
+        text-decoration: underline;
+    }
+
+    .dropzone-hint {
+        display: none;
+    }
+}
+
+.drop-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0;
+    box-shadow: inset 0 0 0 3px var(--accent), inset 0 0 40px rgba(250,20,122,0.25);
+    transition: opacity 0.15s ease;
+}
+
+.drop-overlay.active {
+    opacity: 1;
+}

@@ -3,14 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imagen a Base64 | Converter</title>
+    <title>Imagen a Base64 | Kromativo</title>
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/upload-panel.css">
+    <script>
+        (function () {
+            var saved = localStorage.getItem('theme');
+            document.documentElement.setAttribute('data-theme', saved || 'light');
+        })();
+    </script>
 </head>
 <body>
+    <div class="theme-switch" role="group" aria-label="Selector de tema">
+        <button id="theme-light" type="button" aria-label="Modo claro">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        </button>
+        <button id="theme-dark" type="button" aria-label="Modo oscuro">
+            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+    </div>
+    <div class="drop-overlay" id="drop-overlay"></div>
     <main id="app">
-        <!-- Upload panel aqui (Sprint 1) -->
+        <div class="upload-container">
+            <h1>Imagen a <span class="accent">Base64</span></h1>
+            <p class="subtitle">Convierte tus imágenes a Base64 con 3 niveles de compresión y descarga todo en un solo ZIP.</p>
+
+            <label for="file-input" class="dropzone" id="dropzone">
+                <input type="file" id="file-input" accept="image/*" multiple hidden>
+                <div class="dropzone-icon">＋</div>
+                <p class="dropzone-text">Arrastra tus imágenes o <span class="dropzone-link">selecciona archivos</span></p>
+                <p class="dropzone-hint">JPG, PNG, WEBP, GIF, AVIF +más · máx. 10 archivos, 50MB c/u</p>
+            </label>
+
+            <div class="file-progress" id="file-progress" hidden>
+                <div class="file-progress-bar">
+                    <div class="file-progress-fill" id="file-progress-fill"></div>
+                </div>
+                <span class="file-progress-count" id="file-progress-count">0/10</span>
+            </div>
+
+            <ul class="file-list" id="file-list" hidden></ul>
+
+            <div class="error-list" id="error-list"></div>
+
+            <p class="privacy-note">🔒 Todo ocurre en tu navegador — nunca guardamos tus archivos</p>
+
+            <button class="btn-convert" id="btn-convert" type="button" disabled>Convertir</button>
+        </div>
     </main>
+    <footer class="site-footer">
+        <div class="site-footer-links">
+            <a href="https://github.com/Kromativo/imagen-to-base64-web" target="_blank" rel="noopener" aria-label="Ver código en GitHub">
+                <svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg>
+            </a>
+            <a href="mailto:kromativo@gmail.com" aria-label="Escribir a Kromativo">
+                <svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+            </a>
+        </div>
+        <p class="site-footer-note">
+            Creado por Kromativo · Proyecto construido con asistencia de inteligencia artificial.<br>
+            © 2026 Kromativo · <a href="https://github.com/Kromativo/imagen-to-base64-web/blob/main/LICENSE" target="_blank" rel="noopener">Licencia MIT</a>
+        </p>
+    </footer>
     <script src="js/security.js"></script>
     <script src="js/converter.js"></script>
     <script src="js/ui-handler.js"></script>
