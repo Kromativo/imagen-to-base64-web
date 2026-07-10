@@ -1,0 +1,16 @@
+{
+  "buildCommand": "echo 'Static build'",
+  "outputDirectory": "web",
+  "framework": null,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, no-cache, must-revalidate, proxy-revalidate"
+        }
+      ]
+    }
+  ]
+}
