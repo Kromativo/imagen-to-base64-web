@@ -79,6 +79,13 @@ function formatBytesPrecise(bytes) {
 async function processFile(file) {
     const { img, url } = await loadImageElement(file);
 
+    if (exceedsMaxPixels(img.naturalWidth, img.naturalHeight)) {
+        URL.revokeObjectURL(url);
+        const err = new Error('DIMENSIONS_TOO_LARGE');
+        err.code = 'DIMENSIONS_TOO_LARGE';
+        throw err;
+    }
+
     try {
         // Pedimos siempre el formato original. Si el navegador no puede
         // re-codificarlo (GIF, AVIF, etc.), cae automáticamente a PNG —

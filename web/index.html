@@ -15,25 +15,31 @@
     </script>
 </head>
 <body>
-    <div class="theme-switch" role="group" aria-label="Selector de tema">
-        <button id="theme-light" type="button" aria-label="Modo claro">
-            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-        </button>
-        <button id="theme-dark" type="button" aria-label="Modo oscuro">
-            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-        </button>
+    <div class="top-controls">
+        <div class="lang-switch" role="group" aria-label="Selector de idioma">
+            <button id="lang-es" type="button">ES</button>
+            <button id="lang-en" type="button">EN</button>
+        </div>
+        <div class="theme-switch" role="group" aria-label="Selector de tema">
+            <button id="theme-light" type="button" aria-label="Modo claro">
+                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+            </button>
+            <button id="theme-dark" type="button" aria-label="Modo oscuro">
+                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+        </div>
     </div>
     <div class="drop-overlay" id="drop-overlay"></div>
     <main id="app">
         <div class="upload-container">
-            <h1>Imagen a <span class="accent">Base64</span></h1>
-            <p class="subtitle">Convierte tus imágenes a Base64 con 3 niveles de compresión y descarga todo en un solo ZIP.</p>
+            <h1 data-i18n-html="heroTitleHtml">Imagen a <span class="accent">Base64</span></h1>
+            <p class="subtitle" data-i18n="subtitle">Convierte tus imágenes a Base64 con 3 niveles de compresión y descarga todo en un solo ZIP.</p>
 
             <label for="file-input" class="dropzone" id="dropzone">
                 <input type="file" id="file-input" accept="image/*" multiple hidden>
                 <div class="dropzone-icon">＋</div>
-                <p class="dropzone-text">Arrastra tus imágenes o <span class="dropzone-link">selecciona archivos</span></p>
-                <p class="dropzone-hint">JPG, PNG, WEBP, GIF, AVIF +más · máx. 10 archivos, 50MB c/u</p>
+                <p class="dropzone-text" data-i18n-html="dropzoneTextHtml">Arrastra tus imágenes o <span class="dropzone-link">selecciona archivos</span></p>
+                <p class="dropzone-hint" data-i18n="dropzoneHint">JPG, PNG, WEBP, GIF, AVIF +más · máx. 10 archivos, 50MB c/u</p>
             </label>
 
             <div class="file-progress" id="file-progress" hidden>
@@ -47,20 +53,20 @@
 
             <div class="error-list" id="error-list"></div>
 
-            <p class="privacy-note">🔒 Todo ocurre en tu navegador — nunca guardamos tus archivos</p>
+            <p class="privacy-note" data-i18n="privacyNote">🔒 Todo ocurre en tu navegador — nunca guardamos tus archivos</p>
 
-            <button class="btn-convert" id="btn-convert" type="button" disabled>Convertir</button>
+            <button class="btn-convert" id="btn-convert" type="button" data-i18n="convert" disabled>Convertir</button>
         </div>
 
         <div class="results-container" id="results-container" hidden>
             <div class="results-header">
-                <h1>Tus imágenes están <span class="accent">listas</span></h1>
-                <p class="subtitle">Descarga todo en un ZIP, o elige un solo nivel por imagen.</p>
+                <h1 data-i18n-html="resultsTitleHtml">Tus imágenes están <span class="accent">listas</span></h1>
+                <p class="subtitle" data-i18n="resultsSubtitle">Descarga todo en un ZIP, o elige un solo nivel por imagen.</p>
             </div>
 
             <div class="results-actions">
-                <button class="btn-convert" id="btn-download-all" type="button">Descargar todo (ZIP)</button>
-                <button class="btn-secondary" id="btn-back" type="button">Cargar otras imágenes</button>
+                <button class="btn-convert" id="btn-download-all" type="button" data-i18n="downloadAll">Descargar todo (ZIP)</button>
+                <button class="btn-secondary" id="btn-back" type="button" data-i18n="loadOthers">Cargar otras imágenes</button>
             </div>
 
             <div class="result-cards" id="result-cards"></div>
@@ -97,11 +103,12 @@
             </a>
         </div>
         <p class="site-footer-note">
-            Creado por Kromativo · Proyecto construido con asistencia de inteligencia artificial.<br>
-            © 2026 Kromativo · <a href="https://github.com/Kromativo/imagen-to-base64-web/blob/main/LICENSE" target="_blank" rel="noopener">Licencia MIT</a>
+            <span data-i18n="footerNote">Creado por Kromativo · Proyecto construido con asistencia de inteligencia artificial.</span><br>
+            <span data-i18n="footerCopyright">© 2026 Kromativo</span> · <a href="https://github.com/Kromativo/imagen-to-base64-web/blob/main/LICENSE" target="_blank" rel="noopener" data-i18n="footerLicense">Licencia MIT</a>
         </p>
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="js/i18n.js"></script>
     <script src="js/security.js"></script>
     <script src="js/converter.js"></script>
     <script src="js/ui-handler.js"></script>

@@ -46,7 +46,7 @@ function showError(message) {
     item.className = 'error-item';
     item.innerHTML = `
         <span>${message}</span>
-        <button class="error-item-dismiss" type="button" aria-label="Cerrar alerta">✕</button>
+        <button class="error-item-dismiss" type="button" aria-label="${t('dismissAlert')}">✕</button>
     `;
     item.querySelector('.error-item-dismiss').addEventListener('click', () => item.remove());
     errorListEl.appendChild(item);
@@ -98,7 +98,7 @@ function renderFileList() {
                 <span class="file-item-name" title="${file.name}">${displayFileName(file.name)}</span>
                 <span class="file-item-size">${formatBytes(file.size)}</span>
             </div>
-            <button class="file-item-remove" type="button" aria-label="Quitar ${file.name}" data-index="${index}">✕</button>
+            <button class="file-item-remove" type="button" aria-label="${t('removeLabel', file.name)}" data-index="${index}">✕</button>
         `;
         fileListEl.appendChild(li);
     });
@@ -128,31 +128,43 @@ function isRawFile(file) {
     return RAW_EXTENSIONS.includes(ext);
 }
 
-function addFiles(fileArray) {
+async function addFiles(fileArray) {
     for (const file of fileArray) {
         if (isRawFile(file)) {
-            showError(`"${file.name}" es un formato RAW de cámara — los navegadores no pueden procesarlo. Expórtalo a JPG/PNG primero.`);
+            showError(t('errRaw', file.name));
             continue;
         }
 
         if (!file.type.startsWith('image/')) {
-            showError(`"${file.name}" no es un formato válido — se omitió.`);
+            showError(t('errInvalidFormat', file.name));
             continue;
         }
 
         if (file.size > MAX_FILE_SIZE) {
-            showError(`"${file.name}" supera el límite de 50MB — se omitió.`);
+            showError(t('errTooLarge', file.name));
             continue;
         }
 
         if (selectedFiles.length >= MAX_FILES) {
-            showError(`Límite de ${MAX_FILES} archivos a la vez alcanzado.`);
+            showError(t('errMaxFiles', MAX_FILES));
             break;
         }
 
         if (totalSize() + file.size > MAX_TOTAL_SIZE) {
-            showError(`El peso combinado supera ${formatBytes(MAX_TOTAL_SIZE)}.`);
+            showError(t('errMaxTotal', formatBytes(MAX_TOTAL_SIZE)));
             break;
+        }
+
+        let looksReal;
+        try {
+            looksReal = await hasRealImageSignature(file);
+        } catch {
+            looksReal = true; // si no pudimos leer los bytes, dejamos que el decode real decida
+        }
+
+        if (!looksReal) {
+            showError(t('errNotRealImage', file.name));
+            continue;
         }
 
         selectedFiles.push(file);
@@ -211,9 +223,9 @@ function zipTimestamp() {
 }
 
 function ratioText(ratio) {
-    if (ratio > 0.5) return `${ratio.toFixed(0)}% comprimido`;
-    if (ratio < -0.5) return `+${Math.abs(ratio).toFixed(0)}% más pesado`;
-    return 'Sin cambio de peso';
+    if (ratio > 0.5) return t('compressed', ratio.toFixed(0));
+    if (ratio < -0.5) return t('heavier', Math.abs(ratio).toFixed(0));
+    return t('noChange');
 }
 
 function renderResultCards() {
@@ -225,20 +237,20 @@ function renderResultCards() {
 
         const tiles = PRESET_ORDER.map((key) => {
             const preset = item.presets[key];
-            const codeLines = Math.ceil(preset.base64Length / 76).toLocaleString('es-CO');
+            const codeLines = Math.ceil(preset.base64Length / 76).toLocaleString(currentLang === 'en' ? 'en-US' : 'es-CO');
             return `
                 <div class="preset-tile">
                     <div>
                         <span class="preset-badge ${key}">${key}</span>
                         <div class="preset-tile-sizes">${formatBytes(item.originalFile.size)} → <strong>${preset.sizeFmt}</strong></div>
                         <div class="preset-tile-ratio ${key}">${ratioText(preset.ratio)}</div>
-                        <div class="preset-tile-code">~${codeLines} líneas de código</div>
+                        <div class="preset-tile-code">${t('codeLines', codeLines)}</div>
                     </div>
                     <div class="preset-tile-actions">
-                        <button type="button" class="btn-preview" data-item="${itemIndex}" data-preset="${key}" aria-label="Ver ${key}">
+                        <button type="button" class="btn-preview" data-item="${itemIndex}" data-preset="${key}" aria-label="${t('viewLabel', key)}">
                             <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
                         </button>
-                        <button type="button" class="btn-download-tile" data-item="${itemIndex}" data-preset="${key}" aria-label="Descargar ${key}">
+                        <button type="button" class="btn-download-tile" data-item="${itemIndex}" data-preset="${key}" aria-label="${t('downloadLabel', key)}">
                             <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 21h16"/></svg>
                         </button>
                     </div>
@@ -251,7 +263,7 @@ function renderResultCards() {
                 <img class="image-group-thumb" src="${item.presets.light.dataUri}" alt="${item.originalFile.name}">
                 <div class="image-group-header-text">
                     <div class="image-group-title" title="${item.originalFile.name}">${item.originalFile.name}</div>
-                    <div class="image-group-meta">${item.originalDimensions.width}×${item.originalDimensions.height} · ${formatBytes(item.originalFile.size)} original</div>
+                    <div class="image-group-meta">${item.originalDimensions.width}×${item.originalDimensions.height} · ${formatBytes(item.originalFile.size)} ${t('original')}</div>
                 </div>
             </div>
             <div class="preset-grid">${tiles}</div>
@@ -270,7 +282,7 @@ function renderResultCards() {
                 downloadBlob(microZip, `${item.baseName}-${presetKey}.zip`);
             } catch (err) {
                 console.error(err);
-                showError('No se pudo generar la descarga. Intenta de nuevo.');
+                showError(t('errGenericDownload'));
             } finally {
                 btn.disabled = false;
             }
@@ -340,29 +352,32 @@ function showUploadView() {
 btnConvert.addEventListener('click', async () => {
     if (selectedFiles.length === 0) return;
 
-    const originalLabel = btnConvert.textContent;
     btnConvert.disabled = true;
     clearErrors();
 
     const processed = [];
 
     for (let i = 0; i < selectedFiles.length; i++) {
-        btnConvert.textContent = `Convirtiendo ${i + 1}/${selectedFiles.length}...`;
+        btnConvert.textContent = t('converting', i + 1, selectedFiles.length);
         try {
             processed.push(await processFile(selectedFiles[i]));
         } catch (err) {
             console.error(err);
-            showError(`"${selectedFiles[i].name}" no se pudo procesar — se omitió.`);
+            if (err.code === 'DIMENSIONS_TOO_LARGE') {
+                showError(t('errTooBigDims', selectedFiles[i].name));
+            } else {
+                showError(t('errFileFailed', selectedFiles[i].name));
+            }
         }
     }
 
     processed.forEach((item) => {
         if (!item.formatPreserved) {
-            showError(`"${item.originalFile.name}" no pudo conservarse en su formato original (tu navegador no lo soporta) — se convirtió a ${item.ext.slice(1).toUpperCase()}.`);
+            showError(t('errFormatFallback', item.originalFile.name, item.ext.slice(1).toUpperCase()));
         }
     });
 
-    btnConvert.textContent = originalLabel;
+    btnConvert.textContent = t('convert');
     btnConvert.disabled = selectedFiles.length === 0;
 
     if (processed.length > 0) {
@@ -373,9 +388,8 @@ btnConvert.addEventListener('click', async () => {
 
 btnDownloadAll.addEventListener('click', async () => {
     if (processedResults.length === 0) return;
-    const originalLabel = btnDownloadAll.textContent;
     btnDownloadAll.disabled = true;
-    btnDownloadAll.textContent = 'Generando ZIP...';
+    btnDownloadAll.textContent = t('generatingZip');
 
     try {
         const zipBlob = await buildZip(processedResults);
@@ -385,9 +399,9 @@ btnDownloadAll.addEventListener('click', async () => {
         downloadBlob(zipBlob, zipName);
     } catch (err) {
         console.error(err);
-        showError('No se pudo generar el ZIP. Intenta de nuevo.');
+        showError(t('errGenericZip'));
     } finally {
-        btnDownloadAll.textContent = originalLabel;
+        btnDownloadAll.textContent = t('downloadAll');
         btnDownloadAll.disabled = false;
     }
 });
@@ -417,3 +431,29 @@ themeLightBtn.addEventListener('click', () => setTheme('light'));
 themeDarkBtn.addEventListener('click', () => setTheme('dark'));
 
 setTheme(getActiveTheme());
+
+// Language switch
+const langEsBtn = document.getElementById('lang-es');
+const langEnBtn = document.getElementById('lang-en');
+
+function updateLangButtons() {
+    langEsBtn.classList.toggle('active', currentLang === 'es');
+    langEnBtn.classList.toggle('active', currentLang === 'en');
+}
+
+function onLanguageChange() {
+    updateLangButtons();
+    if (!btnConvert.disabled || selectedFiles.length > 0) {
+        renderFileList();
+    }
+    if (!resultsContainer.hidden) {
+        renderResultCards();
+    }
+}
+
+langEsBtn.addEventListener('click', () => setLanguage('es'));
+langEnBtn.addEventListener('click', () => setLanguage('en'));
+
+currentLang = detectLanguage();
+applyStaticTranslations();
+updateLangButtons();
