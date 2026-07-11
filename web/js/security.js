@@ -2,8 +2,11 @@
 
 // Máximo de píxeles totales (ancho × alto) que procesamos. Evita que una
 // imagen con dimensiones absurdas (real o manipulada) cuelgue el navegador
-// al dibujarla en <canvas> (equivalente a una "decompression bomb").
-const MAX_PIXELS = 60_000_000; // ~60 megapíxeles (ej. 10000x6000)
+// al dibujarla en <canvas> (equivalente a una "decompression bomb"). Se
+// fijó en 150MP con margen amplio sobre cámaras reales — celulares de
+// 65MP, full-frame profesional (~60MP) e incluso medio formato (~100MP)
+// — para no rechazar fotos legítimas de gama alta.
+const MAX_PIXELS = 150_000_000; // ~150 megapíxeles
 
 // Firmas binarias ("magic bytes") de los formatos de imagen reales más
 // comunes. Comparamos esto contra el contenido real del archivo — no
