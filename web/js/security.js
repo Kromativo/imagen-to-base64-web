@@ -47,3 +47,21 @@ async function hasRealImageSignature(file) {
 function exceedsMaxPixels(width, height) {
     return width * height > MAX_PIXELS;
 }
+
+// Comprueba las dimensiones ANTES de aceptar el archivo en la lista, así
+// la persona se entera al cargar — no después de esperar toda la conversión.
+function checkDimensionsEarly(file) {
+    return new Promise((resolve) => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+            URL.revokeObjectURL(url);
+            resolve(!exceedsMaxPixels(img.naturalWidth, img.naturalHeight));
+        };
+        img.onerror = () => {
+            URL.revokeObjectURL(url);
+            resolve(true); // si no pudimos leerla aquí, dejamos que el flujo normal la maneje
+        };
+        img.src = url;
+    });
+}

@@ -167,6 +167,12 @@ async function addFiles(fileArray) {
             continue;
         }
 
+        const dimensionsOk = await checkDimensionsEarly(file);
+        if (!dimensionsOk) {
+            showError(t('errTooBigDims', file.name));
+            continue;
+        }
+
         selectedFiles.push(file);
     }
 
