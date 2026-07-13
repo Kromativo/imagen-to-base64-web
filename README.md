@@ -20,7 +20,7 @@ Zero-knowledge image to base64 converter with ZIP export. 100% client-side proce
 
 ## Demo
 
-[Live at imagen-to-base64.vercel.app](https://imagen-to-base64.vercel.app) (coming soon)
+[Live at imagen-to-base64-web.vercel.app](https://imagen-to-base64-web.vercel.app)
 
 ## How to Use
 
